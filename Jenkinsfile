@@ -1,39 +1,27 @@
 pipeline {
     agent any
-    environment {
-        IMAGE_NAME = 'student-feedback-app'
-        CONTAINER_NAME = 'student-feedback-app'
-        DOCKER_PORT = '5000'
-    }
+
     stages {
-        stage('Checkout Code') {
+
+        stage('Clone Code') {
             steps {
-                // Replace with your GitHub repo URL
-                git 'https://github.com/your-username/student-feedback-system.git'
+                git branch: 'main', url: 'https://github.com/umanagesh789/student-feedback-system.git'
             }
         }
+
         stage('Build Docker Image') {
             steps {
-                script {
-                    bat "docker build -t %IMAGE_NAME% ."
-                }
+                bat 'docker build -t student-feedback-app .'
             }
         }
-        stage('Stop and Remove Old Container') {
+
+        stage('Run Container') {
             steps {
-                script {
-                    // Stop and remove if running
-                    bat "docker stop %CONTAINER_NAME% || exit 0"
-                    bat "docker rm %CONTAINER_NAME% || exit 0"
-                }
+                bat 'docker stop student-app || exit 0'
+                bat 'docker rm student-app || exit 0'
+                bat 'docker run -d -p 5000:5000 --name student-app student-feedback-app'
             }
         }
-        stage('Run New Container') {
-            steps {
-                script {
-                    bat "docker run -d --name %CONTAINER_NAME% -p %DOCKER_PORT%:5000 %IMAGE_NAME%"
-                }
-            }
-        }
+
     }
 }
