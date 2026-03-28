@@ -11,15 +11,15 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t student-feedback-app .'
+                sh 'docker build -t student-feedback-app .'
             }
         }
 
         stage('Run Container') {
             steps {
-                bat 'docker stop student-app || exit 0'
-                bat 'docker rm student-app || exit 0'
-                bat 'docker run -d -p 5000:5000 --name student-app student-feedback-app'
+                sh 'docker stop student-app || exit 0'
+                sh 'docker rm student-app || exit 0'
+                sh 'docker run -d -p 5000:5000 --name student-app student-feedback-app'
             }
         }
 
